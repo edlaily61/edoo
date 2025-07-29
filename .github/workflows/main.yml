@@ -23,12 +23,13 @@ jobs:
         Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
         New-NetFirewallRule -DisplayName "Allow RDP via Ngrok" -Direction Inbound -Action Allow -Protocol TCP -LocalPort 3389
 
-    - name: Create RDP User
-      run: |
-        net user Mahmoudok35@ Mahmoudok35@ /add /Y
-        net localgroup administrators Mahmoudok35@ /add
-        reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\SpecialAccounts\UserList" /v Mahmoudok35@ /t REG_DWORD /d 0 /f
-
+    - name: Enable RDP
+        run: |
+          net user kamel123 MyStrong123 /add
+          net localgroup administrators kamel123 /add
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name 'fDenyTSConnections' -Value 0
+          Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+          ./ngrok.exe tcp 3389
     - name: Start Ngrok and display connection info
       run: |
         # Start Ngrok and capture output
